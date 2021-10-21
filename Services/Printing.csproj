@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\vs.settings" />
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{90C67C83-C536-4FA2-AA45-7588A5125F6B}</ProjectGuid>
+    <SDKPath>..\..</SDKPath>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Dynamics.Retail.Pos.Printing</RootNamespace>
+    <AssemblyName>Printing</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>$(SDKOutputPath)\bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>$(SDKOutputPath)\bin\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevExpress.Data.v14.2">
+      <HintPath>$(PosInstallPath)\DevExpress.Data.v14.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v14.2">
+      <HintPath>$(PosInstallPath)\DevExpress.Utils.v14.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v14.2">
+      <HintPath>$(PosInstallPath)\DevExpress.XtraEditors.v14.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>$(PosInstallPath)\EntityFramework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Dynamics.AX.Efd">
+      <HintPath>$(PosInstallPath)\Microsoft.Dynamics.AX.Efd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FormInfo.cs" />
+    <Compile Include="FormItemInfo.cs" />
+    <Compile Include="FormModulation.cs" />
+    <Compile Include="FormModulationEfd.cs" />
+    <Compile Include="frmReportList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmReportList.Designer.cs">
+      <DependentUpon>frmReportList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedBarcode.cs" />
+    <Compile Include="PrinterAssociation.cs" />
+    <Compile Include="Printing.cs" />
+    <Compile Include="PrintingActions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Dynamics.Retail.Pos.Contracts">
+      <HintPath>$(SDKPath)\Microsoft.Dynamics.Retail.Pos.Contracts.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="DataAccess">
+      <HintPath>$(PosInstallPath)\DataAccess.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MatrixPivotGrid">
+      <HintPath>$(PosInstallPath)\Microsoft.Dynamics.Retail.MatrixPivotGrid.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Diagnostics">
+      <HintPath>$(PosInstallPath)\Microsoft.Dynamics.Retail.Diagnostics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="POSControls">
+      <HintPath>$(PosInstallPath)\POSControls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="POSProcesses">
+      <HintPath>$(PosInstallPath)\POSProcesses.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Dynamics.Retail.Pos.SystemCore">
+      <HintPath>$(PosInstallPath)\Microsoft.Dynamics.Retail.Pos.SystemCore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SystemSettings">
+      <HintPath>$(PosInstallPath)\SystemSettings.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Transaction">
+      <HintPath>$(PosInstallPath)\Transaction.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="frmReportList.resx">
+      <DependentUpon>frmReportList.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SQLServerCrypto\SQLServerCrypto.csproj">
+      <Project>{8f5bc98f-b03d-4b2d-b08c-4774e94592bf}</Project>
+      <Name>SQLServerCrypto</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
