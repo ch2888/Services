@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\vs.settings" />
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{652D460D-8122-44E1-A0F1-F939D50B7984}</ProjectGuid>
+    <SDKPath>..\..</SDKPath>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Dynamics.Retail.Pos.Services</RootNamespace>
+    <AssemblyName>Peripherals</AssemblyName>
+    <OutputPath>..\..\POS\bin\$(Configuration)\services\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.OposCashDrawer">
+      <HintPath>$(PosInstallPath)\Services\Interop.OposCashDrawer.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.OposConstants">
+      <HintPath>$(PosInstallPath)\Services\Interop.OposConstants.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.OposKeyLock">
+      <HintPath>$(PosInstallPath)\Services\Interop.OposKeyLock.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.OposLineDisplay">
+      <HintPath>$(PosInstallPath)\Services\Interop.OposLineDisplay.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.OposMSR">
+      <HintPath>$(PosInstallPath)\Services\Interop.OposMSR.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.OposPinPad">
+      <HintPath>$(PosInstallPath)\Services\Interop.OposPinPad.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.OposPOSPrinter">
+      <HintPath>$(PosInstallPath)\Services\Interop.OposPOSPrinter.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.OposScale">
+      <HintPath>$(PosInstallPath)\Services\Interop.OposScale.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.OposScanner">
+      <HintPath>$(PosInstallPath)\Services\Interop.OposScanner.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Interop.OposSigCap">
+      <HintPath>$(PosInstallPath)\Services\Interop.OposSigCap.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IronBarCode, Version=2020.12.2.0, Culture=neutral, PublicKeyToken=b971bb3971bdf306, processorArchitecture=MSIL">
+      <HintPath>..\packages\BarCode.2020.12.2\lib\net40\IronBarCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism">
+      <HintPath>$(PosInstallPath)\Microsoft.Practices.Prism.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>$(PosInstallPath)\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Diagnostics">
+      <HintPath>$(PosInstallPath)\Microsoft.Dynamics.Retail.Diagnostics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="DevExpress.Data.v14.2">
+      <HintPath>$(PosInstallPath)\DevExpress.Data.v14.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v14.2">
+      <HintPath>$(PosInstallPath)\DevExpress.Utils.v14.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v14.2">
+      <HintPath>$(PosInstallPath)\DevExpress.XtraEditors.v14.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Dynamics.Retail.Notification.Contracts">
+      <HintPath>$(PosInstallPath)\Microsoft.Dynamics.Retail.Notification.Contracts.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Dynamics.Retail.Notification.Proxy">
+      <HintPath>$(PosInstallPath)\Microsoft.Dynamics.Retail.Notification.Proxy.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Dynamics.Retail.Pos.Contracts">
+      <HintPath>$(SDKPath)\Microsoft.Dynamics.Retail.Pos.Contracts.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="DataAccess">
+      <HintPath>$(PosInstallPath)\DataAccess.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Dynamics.Retail.Pos.DataEntity">
+      <HintPath>$(PosInstallPath)\Microsoft.Dynamics.Retail.Pos.DataEntity.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="POSControls">
+      <HintPath>$(PosInstallPath)\POSControls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="POSProcesses">
+      <HintPath>$(PosInstallPath)\POSProcesses.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SystemSettings">
+      <HintPath>$(PosInstallPath)\SystemSettings.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Transaction">
+      <HintPath>$(PosInstallPath)\Transaction.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Barcode\Barcode.cs" />
+    <Compile Include="Barcode\BarcodeCode128.cs" />
+    <Compile Include="Barcode\BarcodeCode39.cs" />
+    <Compile Include="CashDrawer.cs" />
+    <Compile Include="CashDrawerProxy.cs" />
+    <Compile Include="DefaultFiscalPrinter.cs" />
+    <Compile Include="DualDisplay.cs" />
+    <Compile Include="DualDisplayForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DualDisplayForm.designer.cs">
+      <DependentUpon>DualDisplayForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyLock.cs" />
+    <Compile Include="LineDisplay.cs" />
+    <Compile Include="LogOnDevice.cs" />
+    <Compile Include="MSR.cs" />
+    <Compile Include="Peripherals.cs" />
+    <Compile Include="PinPad.cs" />
+    <Compile Include="Printer.cs" />
+    <Compile Include="PrinterHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RFIDScanner.cs" />
+    <Compile Include="Scale.cs" />
+    <Compile Include="Scanner.cs" />
+    <Compile Include="ScannerProxy.cs" />
+    <Compile Include="SignatureCapture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DualDisplayForm.resx">
+      <DependentUpon>DualDisplayForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Logo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
