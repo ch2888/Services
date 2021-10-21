@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\vs.settings" />
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{282963A8-B6CE-464E-8F9A-5B3A044F53E9}</ProjectGuid>
+    <SDKPath>..\..</SDKPath>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Dynamics.Retail.Pos.BlankOperations</RootNamespace>
+    <AssemblyName>BlankOperations</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>$(SDKOutputPath)\bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>$(SDKOutputPath)\bin\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevExpress.Data.v14.2">
+      <HintPath>$(PosInstallPath)\DevExpress.Data.v14.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v14.2">
+      <HintPath>$(PosInstallPath)\DevExpress.Utils.v14.2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v14.2">
+      <HintPath>C:\Program Files (x86)\Microsoft Dynamics AX\60\Retail POS\DevExpress.XtraEditors.v14.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraLayout.v14.2">
+      <HintPath>C:\Program Files (x86)\Microsoft Dynamics AX\60\Retail POS\DevExpress.XtraLayout.v14.2.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Dynamics.Retail.Pos.SystemCore, Version=6.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Microsoft Dynamics AX\60\Retail POS\Microsoft.Dynamics.Retail.Pos.SystemCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="POSControls">
+      <HintPath>C:\Program Files (x86)\Microsoft Dynamics AX\60\Retail POS\POSControls.DLL</HintPath>
+    </Reference>
+    <Reference Include="SpanapiWrapper">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Microsoft Dynamics AX\60\Retail POS\SpanapiWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core">
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnifonicNextGen.Standard, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BlankOperations.cs" />
+    <Compile Include="frmPNCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPNCode.Designer.cs">
+      <DependentUpon>frmPNCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmAmountCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAmountCode.Designer.cs">
+      <DependentUpon>frmAmountCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmOTPCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmOTPCode.Designer.cs">
+      <DependentUpon>frmOTPCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSMSCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSMSCode.Designer.cs">
+      <DependentUpon>frmSMSCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Dynamics.Retail.Pos.Contracts">
+      <HintPath>$(SDKPath)\Microsoft.Dynamics.Retail.Pos.Contracts.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="DataAccess">
+      <HintPath>$(PosInstallPath)\DataAccess.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="POSProcesses">
+      <HintPath>$(PosInstallPath)\POSProcesses.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="SystemSettings">
+      <HintPath>$(PosInstallPath)\SystemSettings.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Transaction">
+      <HintPath>$(PosInstallPath)\Transaction.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="frmPNCode.resx">
+      <DependentUpon>frmPNCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmAmountCode.resx">
+      <DependentUpon>frmAmountCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmOTPCode.resx">
+      <DependentUpon>frmOTPCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSMSCode.resx">
+      <DependentUpon>frmSMSCode.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SQLServerCrypto\SQLServerCrypto.csproj">
+      <Project>{8f5bc98f-b03d-4b2d-b08c-4774e94592bf}</Project>
+      <Name>SQLServerCrypto</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
