@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+
+    <!-- if not already defined, the SDKPath is the local directory where the settings file resides -->
+    <SDKPath Condition="'$(SDKPath)' == ''">$(MSBuildThisFileDirectory)</SDKPath>
+	
+    <!-- the output of all projects will go into this location -->
+    <SDKOutputPath Condition="'$(SDKOutputPath)' == ''">$(SDKPath)\POS</SDKOutputPath>
+
+    <!-- if not already defined, the PosInstallPath is the default installation path for POS -->
+    <PosInstallPath Condition="'$(PosInstallPath)' == ''">$(ProgramFiles)\Microsoft Dynamics AX\60\Retail POS</PosInstallPath>
+  </PropertyGroup>
+</Project>
