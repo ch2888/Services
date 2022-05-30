@@ -65,6 +65,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
         private string m_strPN;
         private string m_strPN4Qitaf;
         private string m_strAmount;
+        private string m_strResidueAmount4RewardUdt;
         private string m_strOTPValue;
         private string m_strOTPToken;
         private string m_strTransactionID;
@@ -84,6 +85,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
         private string m_strRefRequestId;
         private string m_strRefRequestDate;
         private string m_strRewardAmount;
+        private string m_strReductionAmount;
         private string m_strTransactionGUIDReward;
         private string m_strTransactionGUIDRedeem;
         private string m_strEncInvoice;
@@ -139,6 +141,11 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
         private double fDiscountLimitPerYear;
         private double fDiscountPercentage;
         private double fSumDiscount4Year;
+        private int ndiscount30;
+        private int ndiscount34;
+        private int ndiscount8;
+        private int ndiscount9;
+        private int nelsediscount;
 
         private int test_CommTest(int port)
         {
@@ -447,24 +454,24 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 case 1004: comments2.AppendFormat("1004:Validation Error : TerminalId خطأ في التحقق من الصحة: ​​TerminalID	"); break;
                 case 1005: comments2.AppendFormat("1005:Not Enrolled لم يدرج اسمه	"); break;
                 case 1006: comments2.AppendFormat("1006:Existing request : OTP used طلب موجود: OTP المستخدمة	"); break;
-                case 1007: comments2.AppendFormat("1007:Invalid Pin رقم التعريف الشخصي غير صالح	"); break;
+                case 1007: comments2.AppendFormat("1007:الرمز المدخل غير صحيح"); break;
                 case 1008: comments2.AppendFormat("1008:Resend إعادة إرسال	"); break;
                 case 1009: comments2.AppendFormat("1009:Ratio Error نسبة خطأ	"); break;
                 case 1010: comments2.AppendFormat("1010:Limit Error حد الخطأ	"); break;
                 case 1011: comments2.AppendFormat("1011:Min Max Amount Error الحد الأدنى للخطأ في المبلغ	"); break;
-                case 1012: comments2.AppendFormat("1012:Campaign Amount Error خطأ مبلغ الحملة	"); break;
+                case 1012: comments2.AppendFormat("1012:تم الوصول للحد الأعلى الشهري"); break;
                 case 1013: comments2.AppendFormat("1013:Dealer Not Found تاجر غير موجود	"); break;
-                case 1014: comments2.AppendFormat("1014:Insufficient Balance رصيد غير كاف	"); break;
-                case 1015: comments2.AppendFormat("1015:PIN Already Used رقم التعريف الشخصي مستخدم بالفعل	"); break;
+                case 1014: comments2.AppendFormat("1014:لا يوجد رصيد كاف لإتمام العملية"); break;
+                case 1015: comments2.AppendFormat("1015:تم استخدام الرمز مسبقاً"); break;
                 case 1016: comments2.AppendFormat("1016:Terminal and Branch Not Match المحطة والفرع غير متطابقين	"); break;
                 case 1017: comments2.AppendFormat("1017:Land Line Customer Not Allowed الخط الأرضي العميل غير مسموح به	"); break;
-                case 1018: comments2.AppendFormat("1018:Validation Error : Trnx Not Found خطأ في التحقق من الصحة: ​​Trnx غير موجود	"); break;
-                case 1019: comments2.AppendFormat("1019:QitafNot Found Or Available قطاف غير موجود ولا متوفر	"); break;
+                case 1018: comments2.AppendFormat("1018:العملية غير موجودة"); break;
+                case 1019: comments2.AppendFormat("1019:العميل غير مشترك في برنامج قطاف. للاشتراك أرسل الرمز 201 برسالة نصية إلى 900"); break;
                 case 1020: comments2.AppendFormat("1020:Reward Point Must Be Greater Than Zero يجب أن تكون نقطة المكافآت أكبر من الصفر	"); break;
-                case 1021: comments2.AppendFormat("1021:Validation Error : Can Not Reverse Old Date خطأ التحقق من الصحة: ​​لا يمكن العكس التاريخ القديم	"); break;
+                case 1021: comments2.AppendFormat("لا يمكن إلغاء العملية"); break;
                 case 1022: comments2.AppendFormat("1022:NonSTC Not Allowed nonstc غير مسموح بها	"); break;
-                case 1030: comments2.AppendFormat("1030:PIN Expired and New Pin Send انتهت صلاحية رقم التعريف الشخصي وإرسال رقم تعريف شخصي جديد	"); break;
-                case 1040: comments2.AppendFormat("1040:Redemption Reversed عكس الفداء	"); break;
+                case 1030: comments2.AppendFormat("1030:تم إرسال الرمز للعميل"); break;
+                case 1040: comments2.AppendFormat("1040:تم إلغاء العملية مسبقا "); break;
                 case 1041: comments2.AppendFormat("1041:Refund Period Has Expired انتهت فترة الاسترداد	"); break;
                 case 1042: comments2.AppendFormat("1042:Msisdn Does Not Match With Original Transaction msisdn لا يتطابق مع المعاملة الأصلية	"); break;
                 case 1044: comments2.AppendFormat("1044:Reduction Amount Must Be Positive يجب أن يكون مبلغ التخفيض موجبًا	"); break;
@@ -473,14 +480,14 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 case 1047: comments2.AppendFormat("1047:Earn Transaction Already Succeeded كسب المعاملة نجحت بالفعل	"); break;
                 case 1048: comments2.AppendFormat("1048:Earn Update Transaction Already Succeeded كسب تحديث المعاملة نجحت بالفعل	"); break;
                 case 1049: comments2.AppendFormat("1049:Earn Reversal Transaction Already Succeeded كسب المعاملة الانعكاس نجحت بالفعل	"); break;
-                case 1050: comments2.AppendFormat("1050:Redemption Rejected – Duplicated Request ID تم رفض الاسترداد - معرّف طلب مكرر	"); break;
+                case 1050: comments2.AppendFormat("1050:توجد عملية سابقة بنفس الرقم    "); break;
                 case 1051: comments2.AppendFormat("1051:Earn Rejected - Duplicate Request Id كسب مرفوض - معرف طلب مكررة	"); break;
                 case 1052: comments2.AppendFormat("1052:Earn Update Rejected - Duplicate RequestId كسب تحديث مرفوض - مكررة	"); break;
                 case 1053: comments2.AppendFormat("1053:Earn Reversal Rejected - Duplicate RequestId كسب الانعكاس المرفوض - مكررة	"); break;
                 case 1070: comments2.AppendFormat("1070:Redemption Not Allowed For This Customer الاسترداد غير مسموح به لهذا العميل	"); break;
                 case 1100: comments2.AppendFormat("1100:LoyaltyLookupitemsnotfound loyaltylookupitemsnotfound.	"); break;
                 case 1101: comments2.AppendFormat("1101:LoyaltyUnabletoinsertLoyaltyTrnx loyaltynabletoinsertloyaltytrnx.	"); break;
-                case 1109: comments2.AppendFormat("1109:Terminal Is Passive محطة سلبية	"); break;
+                case 1109: comments2.AppendFormat("1109:تم إرسال العملية من مصدر غير مصرح له بتنفيذ العمليات"); break;
                 case 1200: comments2.AppendFormat("1200:ConfigurationObject is empty ConfignationObject فارغ	"); break;
                 case 1201: comments2.AppendFormat("1201:Configuration file not found ملف التكوين غير موجود	"); break;
                 case 1202: comments2.AppendFormat("1202:File header error خطأ رأس الملف	"); break;
@@ -861,7 +868,11 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                  }
                  return;
              }*/
-            RetailTransaction myTransaction1 = (RetailTransaction)posTransaction;
+            RetailTransaction myTransaction1;
+            //if(posTransaction.TransactionType != LSRetailPosis.Transaction.PosTransaction.TypeOfTransaction.Internal)
+            {
+                // myTransaction1 = (RetailTransaction)posTransaction;
+            }
             Boolean tst = true;
             switch (operationInfo.OperationId)
             {
@@ -956,7 +967,6 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                     key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("Card");
                     key.SetValue("Type", operationInfo.Parameter);
                     key.Close();
-
                     myTransaction1 = (RetailTransaction)posTransaction;
                     if (myTransaction1.SaleItems.Count > 0)
                     {
@@ -976,10 +986,14 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                     }
                     if (tst == true)
                     {
+                        SaleLineItem aItem1 = myTransaction1.SaleItems.First();//!!!!QitafRewardUpdate
+                        bool bSuccess = processQitafRewardUpdateIfAvailable(aItem1.ReturnTransId, aItem1.NetAmountWithTax);
+
+
                         Application.RunOperation(PosisOperations.PayCard, null);
                         m_strRewardAmount = ((int)((LSRetailPosis.Transaction.RetailTransaction)posTransaction).NetAmountWithTax).ToString();
-                        process_Qitaf_RewardPoint();
-                        genShelf(posTransaction.TransactionId, false);
+                        process_Qitaf_RewardPoint(posTransaction.TransactionId);
+                        genShelf(posTransaction.TransactionId, posTransaction.StoreId, false);
                         //  sendLinkAfterPayment(posTransaction.ReceiptId); // send the balancae to qitaf in cas
                     }
 
@@ -987,6 +1001,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                     break;
 
                 case "Reversel": // payment case 
+                    myTransaction1 = (RetailTransaction)posTransaction;
                     if (myTransaction1.SaleItems.Count > 0)
                     {
 
@@ -1070,7 +1085,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                     break;
 
                 case "alrajhi": // payment case 
-
+                    myTransaction1 = (RetailTransaction)posTransaction;
                     if (myTransaction1.SaleItems.Count > 0)
                     {
 
@@ -1188,7 +1203,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                     {
                         if (m_bSuccessOnRedeem)
                         {
-                            PayCash pay = new PayCash(false, "1");
+                            PayCash pay = new PayCash(false, "24");
 
                             pay.OperationID = PosisOperations.PayCash; // choose ure payment method
                             pay.OperationInfo = new OperationInfo();
@@ -1201,7 +1216,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                                 ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).Payment +
                                 paid)
                             {
-                                genShelf(posTransaction.TransactionId, false);
+                                genShelf(posTransaction.TransactionId, posTransaction.StoreId, false);
                             }
                             {
                                 string strTranId = posTransaction.TransactionId;
@@ -1211,41 +1226,15 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                                   process_Qitaf_RewardPoint();*/
 
                             }
-                            /*
-                            decimal fAmountFromBank = decimal.Parse(m_strAmount);
-                            PayCash pay = new PayCash();
-                            pay.OperationID = PosisOperations.PayCashQuick; // choose ure payment method
-                            pay.OperationInfo = new OperationInfo();
-                            pay.POSTransaction = (PosTransaction)posTransaction;
-                            pay.Amount = fAmountFromBank;
-                            pay.RunOperation();
 
-                            
-                            frmPayCash myObject = new frmPayCash();
-                            Type myType = typeof(frmPayCash);
-                            FieldInfo myFieldInfo = myType.GetField("registeredAmount",
-                                BindingFlags.NonPublic | BindingFlags.Instance);
-
-                            // Display the string before applying SetValue to the field.
-                            Console.WriteLine("\nThe field value of registeredAmount is \"{0}\".",
-                                    myFieldInfo.GetValue(myObject));
-                            myFieldInfo.SetValue(myObject, m_strAmount);
-                            */
-
-
-                            //Application.RunOperation(PosisOperations.PayCash, fAmountFromBank, posTransaction);
-                            //((LSRetailPosis.Transaction.RetailTransaction)posTransaction).Payment += fAmountFromBank;
-                            //((LSRetailPosis.Transaction.RetailTransaction)posTransaction).Payment = fAmountFromBank;
-                            //Application.RunOperation(PosisOperations.PayCard, 23);
                         }
-
-
 
                     }
 
 
                     break;
                 case "Qitaf": // pay Qitaf 
+                    myTransaction1 = (RetailTransaction)posTransaction;
                     if (myTransaction1.SaleItems.Count > 0)
                     {
 
@@ -1322,7 +1311,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                         }
                         else
                         {
-                            MessageBox.Show("Pay Qitaf can't be processed without phone number. Please Try again. لا يمكن الدفع بدون إدخال رقم الجوال ");
+                            MessageBox.Show("Pay Qitaf can't be processed without phone number. Please Try again.  ");
                             break;
                         }
 
@@ -1374,8 +1363,224 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
 
                     break;
 
-                case "reserveQitaf": // Qitaf 
+                case "updatepoint":
+                    myTransaction1 = (RetailTransaction)posTransaction;
+                    if (myTransaction1.SaleItems.Count > 0)
+                    {
 
+                        LinkedList<SaleLineItem> Saleslines = myTransaction1.SaleItems;
+                        LinkedList<SaleLineItem>.Enumerator enumtr = Saleslines.GetEnumerator();
+                        while (enumtr.MoveNext())
+                        {
+                            if (enumtr.Current.SalesPersonId == string.Empty || enumtr.Current.SalesPersonId == null)
+                            {
+                                MessageBox.Show("Please select Salesman من فضلك إدخل رقم البائع ");
+                                tst = false;
+                                break;
+                            }
+
+                        }
+                        if (tst == false)
+                        {
+
+                            Employeeid = "";
+                            EmployeeName = "";
+
+
+                            if (((object)posTransaction).GetType() == typeof(RetailTransaction))
+                            {
+                                if (((RetailTransaction)posTransaction).SaleItems.Count > 0)
+                                {
+                                    using (LSRetailPosis.POSProcesses.frmSalesPerson dialog = new LSRetailPosis.POSProcesses.frmSalesPerson())
+                                    {
+                                        LSRetailPosis.POSProcesses.POSFormsManager.ShowPOSForm(dialog);
+                                        Employeeid = dialog.SelectedEmployeeId;
+                                        EmployeeName = dialog.SelectEmployeeName;
+                                    }
+                                }
+
+                                RetailTransaction myTransaction = (RetailTransaction)posTransaction;
+                                if (myTransaction.SaleItems.Count > 0)
+                                {
+
+                                    LinkedList<SaleLineItem> Saleslines1 = myTransaction.SaleItems;
+                                    LinkedList<SaleLineItem>.Enumerator enumtr1 = Saleslines.GetEnumerator();
+                                    while (enumtr1.MoveNext())
+                                    {
+                                        enumtr1.Current.SalesPersonId = Employeeid;
+                                        enumtr1.Current.SalespersonName = EmployeeName;
+
+                                    }
+                                }
+
+                            }
+                            break;
+                        }
+                    }
+
+                    if (tst == false)
+                    {
+                        break;
+                    }
+
+                    if (tst)
+                    {
+                        SaleLineItem aItem1 = myTransaction1.SaleItems.First();
+                        bool bSuccess = processQitafRewardUpdateIfAvailable(aItem1.ReturnTransId, aItem1.NetAmountWithTax);
+                        if (bSuccess)
+                        {
+                            /*
+                            PayCash pay = new PayCash(false, "1");
+
+                            pay.OperationID = PosisOperations.PayCash; // choose ure payment method
+                            pay.OperationInfo = new OperationInfo();
+                            pay.OperationInfo.NumpadValue = "-" + m_strReductionAmount;
+                            pay.POSTransaction = (PosTransaction)posTransaction;
+                            pay.Amount = decimal.Parse("-" + m_strAmount);
+                            pay.RunOperation();*/
+
+                            //MessageBox.Show("Qitaf Reward Update has been completed successfully.");
+
+                        }
+
+                        {
+                            // there is no previous transaction for RewardUpdate
+                            Application.RunOperation(PosisOperations.PayCash, 1);
+                            break;
+                        }
+
+                    }
+
+                    break;
+
+                case "reversonreturn":
+                    // test case
+                    // PN:050 661 7981
+                    // Pay qitaf, "Show Journal"-> "Return Transacton" ?
+                    // Select and return item 
+
+                    // -- process step
+                    // 1. get receipt id, tranId, get qitaf tranid, get qitaf amount, reverseQitafAmount
+                    // 1.. then need to create new transaction for reverQitaf?
+                    // 2. return residue amount by cash
+                    // 2.. then need to create new transaction for refund cash?
+
+
+
+                    myTransaction1 = (RetailTransaction)posTransaction;
+
+                    if (myTransaction1.SaleItems.Count > 0)
+                    {
+                        LinkedList<SaleLineItem> Saleslines = myTransaction1.SaleItems;
+                        LinkedList<SaleLineItem>.Enumerator enumtr = Saleslines.GetEnumerator();
+                        while (enumtr.MoveNext())
+                        {
+                            if (enumtr.Current.SalesPersonId == string.Empty || enumtr.Current.SalesPersonId == null)
+                            {
+                                MessageBox.Show("Please select Salesman من فضلك إدخل رقم البائع ");
+                                tst = false;
+                                break;
+                            }
+
+                        }
+                        if (tst == false)
+                        {
+
+                            Employeeid = "";
+                            EmployeeName = "";
+
+
+                            if (((object)posTransaction).GetType() == typeof(RetailTransaction))
+                            {
+                                if (((RetailTransaction)posTransaction).SaleItems.Count > 0)
+                                {
+                                    using (LSRetailPosis.POSProcesses.frmSalesPerson dialog = new LSRetailPosis.POSProcesses.frmSalesPerson())
+                                    {
+                                        LSRetailPosis.POSProcesses.POSFormsManager.ShowPOSForm(dialog);
+                                        Employeeid = dialog.SelectedEmployeeId;
+                                        EmployeeName = dialog.SelectEmployeeName;
+                                    }
+                                }
+
+                                RetailTransaction myTransaction = (RetailTransaction)posTransaction;
+                                if (myTransaction.SaleItems.Count > 0)
+                                {
+
+                                    LinkedList<SaleLineItem> Saleslines1 = myTransaction.SaleItems;
+                                    LinkedList<SaleLineItem>.Enumerator enumtr1 = Saleslines.GetEnumerator();
+                                    while (enumtr1.MoveNext())
+                                    {
+                                        enumtr1.Current.SalesPersonId = Employeeid;
+                                        enumtr1.Current.SalespersonName = EmployeeName;
+
+                                    }
+                                }
+
+                            }
+                            break;
+                        }
+                    }
+                    if (myTransaction1.LoyaltyItem.LoyaltyCardNumber != null && myTransaction1.LoyaltyItem.LoyaltyCardNumber.Length > 0)
+                    {
+                        MessageBox.Show("Qitaf Can't be process because Loyalty Card is applied. لا يمكن إستخدام قطاف فى حالة إضافة حساب ريف ستار ");
+                        break;
+                    }
+
+                    m_nResponseCode_QitafApi2 = 0;
+                    // Init reverse params.
+                    /*
+                     --select * from ax.RetailQitaftrans
+                    select netamount,netamountincltax,price,transactionid,receiptid,returntransactionid from testdatabase.ax.RETAILTRANSACTIONSALESTRANS
+                    --select * from testdatabase.ax.RETAILTRANSACTIONSALESTRANS
+                    where TRANSDATE = '03-26-2022'
+                     */
+
+                    m_strTransactionGUIDRedeem = "";
+                    m_strAmount = "";
+                    m_strPN = "";// @"506617981";
+                    m_strRefRequestDate = "";//transDATATIME for Reward
+                    m_strRefRequestId = "";//tranGUIDReward for Reward
+                    m_strTansactionID4POS = ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).TransactionId;
+                    SaleLineItem aItem = myTransaction1.SaleItems.First();
+                    String strRetInvoiceId = aItem.ReturnInvoiceId;
+                    m_strTansactionID4POS = aItem.ReturnTransId;
+
+                    bool bRet = prepareFields4ReverseQitaf(m_strTansactionID4POS);
+                    if (m_strRefRequestId.Length < 4)
+                    {
+                        m_strRefRequestId = m_strTransactionGUIDRedeem;
+                    }
+                    if (m_nResponseCode_QitafApi2 == 0 && bRet)
+                    {
+                        int nResCode3 = call_Qitaf_3_ReversePoint();
+                        if (nResCode3 == 0)
+                        {
+                            PayCash pay = new PayCash(false, "1");
+
+                            pay.OperationID = PosisOperations.PayCash; // choose ure payment method
+                            pay.OperationInfo = new OperationInfo();
+                            pay.OperationInfo.NumpadValue = "-" + m_strAmount;
+                            pay.POSTransaction = (PosTransaction)posTransaction;
+                            pay.Amount = decimal.Parse("-" + m_strAmount);
+                            pay.RunOperation();
+
+                            MessageBox.Show("تم إسترجاع نقاط قطاف لحساب العميل مرة أخري");
+                            break;
+                        }
+                        else
+                        {
+                            //MessageBox.Show("Qitaf Reverse Point has been failed." + m_strRetMessage);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(".لا يوجد نقطا مدفوعة لإسترجاعها ");
+                    }
+                    break;
+
+                case "reserveQitaf": // Qitaf 
+                    myTransaction1 = (RetailTransaction)posTransaction;
                     if (myTransaction1.SaleItems.Count > 0)
                     {
 
@@ -1448,7 +1653,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                             pay.Amount = decimal.Parse("-" + m_strAmount);
                             pay.RunOperation();
 
-                            MessageBox.Show("Qitaf Reverse Point has been completed.تم إسترجاع نقاط قطاف لحساب العميل مرة أخري");
+                            MessageBox.Show("تم إسترجاع نقاط قطاف لحساب العميل مرة أخري");
                             break;
                         }
                         else
@@ -1459,11 +1664,12 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                     }
                     else
                     {
-                        MessageBox.Show("There is not any pending Qitaf Redeem Point to be reversed.لا يوجد نقطا مدفوعة لإسترجاعها ");
+                        MessageBox.Show(".لا يوجد نقطا مدفوعة لإسترجاعها ");
                     }
                     break;
 
                 case "collectQitaf": // Qitaf 
+                    myTransaction1 = (RetailTransaction)posTransaction;
                     if (myTransaction1.LoyaltyItem.LoyaltyCardNumber.Length > 0)
                     {
                         MessageBox.Show("Qitaf Can't be process because Loyalty Card is applied. لا يمكن إستخدام قطاف فى حالة إضافة حساب ريف ستار ");
@@ -1484,7 +1690,10 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                         {
                             // if he enter, send SMS
                             m_strPN4Qitaf = dialog1.strPN.ToString();
-                            MessageBox.Show("Customer Phone number " + m_strPN4Qitaf + " is saved for Qitaf Reward Point \n تم حفظ رقم العميل لإضافة مبلغ المشتريات لقطاف ");
+                            double fMount = ((double)((LSRetailPosis.Transaction.RetailTransaction)posTransaction).NetAmountWithTax) * 0.05;// Convert.ToDouble(m_strRewardAmount) / 20;
+                            string strAmount = fMount.ToString("N");
+                            string strMessage = "تم حفظ رقم الجوال " + m_strPN4Qitaf + "لإضافة نقاط إلى قطاف بقيمة " + strAmount + "نقطة";
+                            MessageBox.Show(strMessage);
                             break;
                         }
                         else
@@ -1498,73 +1707,85 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                     }
 
 
-                    break;
+
 
 
 
                 case "PayLoyaltyNew": // payment case 2
-                    if (myTransaction1.SaleItems.Count > 0)
+                    myTransaction1 = (RetailTransaction)posTransaction;
+
+                    if (((LSRetailPosis.Transaction.RetailTransaction)posTransaction).Payment >=
+                            ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).TaxAmount)
                     {
 
-                        LinkedList<SaleLineItem> Saleslines = myTransaction1.SaleItems;
-                        LinkedList<SaleLineItem>.Enumerator enumtr = Saleslines.GetEnumerator();
-                        while (enumtr.MoveNext())
+
+                        if (myTransaction1.SaleItems.Count > 0)
                         {
-                            if (enumtr.Current.SalesPersonId == string.Empty || enumtr.Current.SalesPersonId == null)
+
+                            LinkedList<SaleLineItem> Saleslines = myTransaction1.SaleItems;
+                            LinkedList<SaleLineItem>.Enumerator enumtr = Saleslines.GetEnumerator();
+                            while (enumtr.MoveNext())
                             {
-                                MessageBox.Show("Please select Salesman من فضلك إدخل رقم البائع ");
-                                tst = false;
+                                if (enumtr.Current.SalesPersonId == string.Empty || enumtr.Current.SalesPersonId == null)
+                                {
+                                    MessageBox.Show("Please select Salesman من فضلك إدخل رقم البائع ");
+                                    tst = false;
+                                    break;
+                                }
+
+                            }
+                            if (tst == false)
+                            {
+
+                                Employeeid = "";
+                                EmployeeName = "";
+
+
+                                if (((object)posTransaction).GetType() == typeof(RetailTransaction))
+                                {
+                                    if (((RetailTransaction)posTransaction).SaleItems.Count > 0)
+                                    {
+                                        using (LSRetailPosis.POSProcesses.frmSalesPerson dialog = new LSRetailPosis.POSProcesses.frmSalesPerson())
+                                        {
+                                            LSRetailPosis.POSProcesses.POSFormsManager.ShowPOSForm(dialog);
+                                            Employeeid = dialog.SelectedEmployeeId;
+                                            EmployeeName = dialog.SelectEmployeeName;
+                                        }
+                                    }
+
+                                    RetailTransaction myTransaction = (RetailTransaction)posTransaction;
+                                    if (myTransaction.SaleItems.Count > 0)
+                                    {
+
+                                        LinkedList<SaleLineItem> Saleslines1 = myTransaction.SaleItems;
+                                        LinkedList<SaleLineItem>.Enumerator enumtr1 = Saleslines.GetEnumerator();
+                                        while (enumtr1.MoveNext())
+                                        {
+                                            enumtr1.Current.SalesPersonId = Employeeid;
+                                            enumtr1.Current.SalespersonName = EmployeeName;
+
+                                        }
+                                    }
+
+                                }
                                 break;
                             }
-
                         }
-                        if (tst == false)
+                        if (tst == true)
                         {
+                            Application.RunOperation(PosisOperations.PayLoyalty, 23);
+                            genShelf(posTransaction.TransactionId, posTransaction.StoreId, false);
 
-                            Employeeid = "";
-                            EmployeeName = "";
-
-
-                            if (((object)posTransaction).GetType() == typeof(RetailTransaction))
-                            {
-                                if (((RetailTransaction)posTransaction).SaleItems.Count > 0)
-                                {
-                                    using (LSRetailPosis.POSProcesses.frmSalesPerson dialog = new LSRetailPosis.POSProcesses.frmSalesPerson())
-                                    {
-                                        LSRetailPosis.POSProcesses.POSFormsManager.ShowPOSForm(dialog);
-                                        Employeeid = dialog.SelectedEmployeeId;
-                                        EmployeeName = dialog.SelectEmployeeName;
-                                    }
-                                }
-
-                                RetailTransaction myTransaction = (RetailTransaction)posTransaction;
-                                if (myTransaction.SaleItems.Count > 0)
-                                {
-
-                                    LinkedList<SaleLineItem> Saleslines1 = myTransaction.SaleItems;
-                                    LinkedList<SaleLineItem>.Enumerator enumtr1 = Saleslines.GetEnumerator();
-                                    while (enumtr1.MoveNext())
-                                    {
-                                        enumtr1.Current.SalesPersonId = Employeeid;
-                                        enumtr1.Current.SalespersonName = EmployeeName;
-
-                                    }
-                                }
-
-                            }
-                            break;
                         }
+
                     }
-                    if (tst == true)
+                    else
                     {
-                        Application.RunOperation(PosisOperations.PayLoyalty, 23);
-                        genShelf(posTransaction.TransactionId, false);
-
+                        MessageBox.Show("المبلغ المدفوع أقل من الضريبة فضلا تحصيل الضريبة من العميل  ");
                     }
-
-
                     break;
                 case "CashNew": // payment case 3 
+                    myTransaction1 = (RetailTransaction)posTransaction;
                     if (myTransaction1.SaleItems.Count > 0)
                     {
 
@@ -1627,6 +1848,10 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                             myKey2.SetValue(strRegkey2, "00", RegistryValueKind.String);
                             myKey2.Close();
                         }
+
+                        SaleLineItem aItem1 = myTransaction1.SaleItems.First();//!!!!QitafRewardUpdate
+                        bool bSuccess = processQitafRewardUpdateIfAvailable(aItem1.ReturnTransId, aItem1.NetAmountWithTax);
+
                         Application.RunOperation(PosisOperations.PayCash, 1);
                         string strScanInfo = "00";
                         RegistryKey myKey = Registry.CurrentUser.OpenSubKey(strRegkey2, true);
@@ -1641,17 +1866,10 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                             paid)
                         {
                             m_strRewardAmount = ((int)((LSRetailPosis.Transaction.RetailTransaction)posTransaction).NetAmountWithTax).ToString();
-                            process_Qitaf_RewardPoint();
-                            genShelf(posTransaction.TransactionId, false);
+                            process_Qitaf_RewardPoint(posTransaction.TransactionId);
+                            genShelf(posTransaction.TransactionId, posTransaction.StoreId, false);
                         }
-                        // CustomerPaymentTransaction.
-                        //   sendLinkAfterPayment(posTransaction.ReceiptId); 
-                        /*
-                        using (LSRetailPosis.POSProcesses.frmPayCash dialog = new LSRetailPosis.POSProcesses.frmPayCash())
-                        {
-                            LSRetailPosis.POSProcesses.POSFormsManager.ShowPOSForm(dialog);
-                            dialog.RegisteredAmount;
-                        }*/
+
                     }
 
                     if (((LSRetailPosis.Transaction.RetailTransaction)posTransaction).NetAmountWithTax ==
@@ -1668,6 +1886,24 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                     }
 
                     break;
+
+                case "tester":
+                    {
+
+                        string storeid = posTransaction.StoreId;
+                        using (Microsoft.Dynamics.Retail.Pos.BlankOperations.Dialog.frmTester dlgTester = new Microsoft.Dynamics.Retail.Pos.BlankOperations.Dialog.frmTester(storeid))
+                        {
+                            //dlgTester.m_strStorenumber = storeid;
+                            LSRetailPosis.POSProcesses.POSFormsManager.ShowPOSForm(dlgTester);
+                            //string strRet = dlgTester..Code.ToString();
+                            Console.WriteLine("Tester DONE");
+                        }
+
+                    }
+
+                    break;
+
+
                 case "CashQuickNew": // payment case 4
                     tst = true;
                     myTransaction1 = (RetailTransaction)posTransaction;
@@ -1689,10 +1925,13 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                     }
                     if (tst == true)
                     {
+                        SaleLineItem aItem1 = myTransaction1.SaleItems.First();//!!!!QitafRewardUpdate
+                        bool bSuccess = processQitafRewardUpdateIfAvailable(aItem1.ReturnTransId, aItem1.NetAmountWithTax);
+
                         Application.RunOperation(PosisOperations.PayCashQuick, 1);
                         m_strRewardAmount = ((int)((LSRetailPosis.Transaction.RetailTransaction)posTransaction).NetAmountWithTax).ToString();
-                        process_Qitaf_RewardPoint();
-                        genShelf(posTransaction.TransactionId, false);
+                        process_Qitaf_RewardPoint(posTransaction.TransactionId);
+                        genShelf(posTransaction.TransactionId, posTransaction.StoreId, false);
 
                     }
 
@@ -1848,25 +2087,124 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
 
 
                     break;
-                //    // need to show box ask worker personal id   first :// DONE
-                //740line: check this id avalible in parmter table or not first 
-
-                //    // calculate from Retailworkerdiscounttrans where id == id and transdate in same year as discounttake by worker 
-                //    // if discount amount + discounttake by worker > Retailworkerdiscountparameter.amout peryear "error message You have crossed the limit "
-                //    // if not send sms message for Retailworkerdiscountparameter.phonenumer use 
-                //    // open ui to ask about his code 
-                //    // if this code == randcode make discount 50 % 
-                //747line: at the end save the trans detais in worker trans table: Sure!
-                // 
 
 
-                //    decimal nAmount =
-                //       ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).NetAmountWithTax -
-                //       ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).Payment ;
-                //    nAmount = decimal.Multiply(nAmount, 100);
-                //    Application.RunOperation(PosisOperations.PayCashQuick, 1);
-                //}
-                //break;
+
+                case "Ownerdiscount":
+
+                    // we hide this form and show form same vervcation code to take number manually  only  the number from form == Employeeid
+                    // we stop show this form   and copy vervection code form and numebr from vecation code == em id and all same 
+
+                    Employeeid = "";
+                    EmployeeName = "";
+
+                    using (LSRetailPosis.POSProcesses.frmInputNumpad dialog1 = new LSRetailPosis.POSProcesses.frmInputNumpad())
+                    {
+                        dialog1.PromptText = "من فضلك أدخل الرقم الوظيفي ، أول الجوال المسجل بالنظام ";
+
+                        LSRetailPosis.POSProcesses.POSFormsManager.ShowPOSForm(dialog1);
+
+                        Employeeid = dialog1.InputText.ToString();
+
+                        decimal nAmount =
+                            ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).NetAmountWithTax -
+                            ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).Payment;
+
+                        // check if worker id is existing on parameter table
+                        bool bExist = true;
+                        fDiscountPercentage = 0;
+                        bExist = IsRegisteredWorkerAndOwner(Employeeid);
+                        if (bExist == false)
+                        {
+                            // workerid is not existing in the worker table
+                            MessageBox.Show("Unregistered worker الرقم المدخل غير مسجل بالنظام ولا يوجد له صلاحية خصم ");
+                            break;
+                        }
+                        nAmount = nAmount * ((decimal)fDiscountPercentage / 100);
+                        LSRetailPosis.Transaction.RetailTransaction curTransaction = ((LSRetailPosis.Transaction.RetailTransaction)posTransaction);
+                        decimal amountSum = 0;
+                        for (int i = 0; i < curTransaction.SaleItems.Count; i++)
+                        {
+                            LSRetailPosis.Transaction.Line.SaleItem.SaleLineItem item1 = curTransaction.SaleItems.ElementAt(i);
+                            if (item1.ItemId.StartsWith("30"))
+                            {
+                                amountSum += item1.Price * (ndiscount30) / 100 * item1.Quantity; // this 2 take form filed discount30
+
+
+                            }
+                            else if (item1.ItemId.StartsWith("34"))
+                            {
+                                amountSum += item1.Price * (ndiscount34) / 100 * item1.Quantity; // this 35 take from discount34
+
+                            }
+                            else if (item1.ItemId.StartsWith("8"))
+                            {
+                                amountSum += item1.Price * (ndiscount8) / 100 * item1.Quantity;  // this 35 take from   [discount8] from database 
+
+                            }
+                            else if (item1.ItemId.StartsWith("9"))
+                            {
+                                amountSum += item1.Price * (ndiscount9) / 100 * item1.Quantity; // this 35 take from   [discount9] from database
+
+                            }
+                            else
+                            {
+                                // this 0 take from   [elsediscount] from database
+                                amountSum += item1.Price * (nelsediscount) / 100 * item1.Quantity;
+                            }
+
+                        }
+                        nAmount = amountSum;
+                        string strAmount = nAmount.ToString("0.00");
+                        {
+                            double fAmountDiscount = Convert.ToDouble(nAmount.ToString());
+                            fSumDiscount4Year = getSumDiscount4Year(Employeeid); // check if discount_amount + discounttake by worker > Retailworkerdiscountparameter.amount
+                            if (fDiscountLimitPerYear >= fSumDiscount4Year + fAmountDiscount)
+                            {
+                                bool bCorrectSMS =
+                                SendSMS(strCardNumber, decimal.Parse(strAmount), 1);
+                                if (bCorrectSMS)
+                                {
+                                    // Process payment for discount 50%
+                                    fDiscountPercentage = 0;//!! Ignore normal discount for owner
+                                    decimal dDiscountPecent = (decimal)fDiscountPercentage;
+                                    ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).SetTotalDiscPercent(dDiscountPecent);
+                                    decimal dTotDiscount = ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).TotalDiscount;
+                                    ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).SetTotalDiscAmount(nAmount);
+                                    Application.RunOperation(PosisOperations.TotalDiscountAmount, nAmount);
+                                    //Application.RunOperation(PosisOperations.LineDiscountAmount, nAmount);
+                                    //Application.RunOperation(PosisOperations.CalculateFullDiscounts, nAmount); 
+                                    // insert new transaction into the table : ax.Retailworkerdiscounttrans with new payment info
+                                    Insert_workerDiscountTrans(
+                                        ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).TransactionId,
+                                        Employeeid, strCardNumber, strAmount,
+                                        ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).StoreId,
+                                        ((LSRetailPosis.Transaction.RetailTransaction)posTransaction).ReceiptId);
+                                }
+                                else
+                                {
+                                    // invalid sms => will show message from SMS lib function
+                                    MessageBox.Show("Invalid Code رمز التأكيد خطأ ");
+                                }
+                            }
+                            else
+                            {// Discount is not available
+                                // errror message : "You've crossed the limit for discount"
+                                string strMsg = "You've crossed the limit for discount  لقد تجازوت حد الخصم المسموح به  .\n";
+                                strMsg += "Your limit  حد الخصم السنوى : " + fDiscountLimitPerYear.ToString("F") + "\n";
+                                strMsg += "and you used لقد إستخدمت    :" + fSumDiscount4Year.ToString("F") + "\n";
+                                strMsg += "remaing is متبقي  : " + (fDiscountLimitPerYear - fSumDiscount4Year).ToString("F") + "\n";
+                                MessageBox.Show(strMsg + "لقد تجازت الحد الأعلى المسموح لك به خلال العام "); // need to add his limit 
+                            }
+                        }
+
+
+
+                    }
+
+
+                    break;
+
 
 
 
@@ -1875,6 +2213,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
 
                 case "99": // payment case 5
                     {
+                        myTransaction1 = (RetailTransaction)posTransaction;
 
                         if (myTransaction1.SaleItems.Count > 0)
                         {
@@ -1957,12 +2296,15 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                             {
                                 if (isApproved)
                                 {
+                                    SaleLineItem aItem1 = myTransaction1.SaleItems.First();//!!!!QitafRewardUpdate
+                                    bool bSuccess = processQitafRewardUpdateIfAvailable(aItem1.ReturnTransId, aItem1.NetAmountWithTax);
+
                                     var application = PosApplication.Instance as IApplication;
                                     application.RunOperation(PosisOperations.PayCashQuick, PaymentId1, posTransaction);
                                     // sendLinkAfterPayment(posTransaction.ReceiptId); 
                                     m_strRewardAmount = ((int)((LSRetailPosis.Transaction.RetailTransaction)posTransaction).NetAmountWithTax).ToString();
-                                    process_Qitaf_RewardPoint();
-                                    genShelf(posTransaction.TransactionId, false);
+                                    process_Qitaf_RewardPoint(posTransaction.TransactionId);
+                                    genShelf(posTransaction.TransactionId, posTransaction.StoreId, false);
                                 }
                             }
                             else
@@ -1985,6 +2327,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 //-----------------------------------------------------
                 case "992": // payment case 6
                     {
+                        myTransaction1 = (RetailTransaction)posTransaction;
 
                         if (myTransaction1.SaleItems.Count > 0)
                         {
@@ -2067,12 +2410,16 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                             {
                                 if (isApproved)
                                 {
+                                    SaleLineItem aItem1 = myTransaction1.SaleItems.First();//!!!!QitafRewardUpdate
+                                    bool bSuccess = processQitafRewardUpdateIfAvailable(aItem1.ReturnTransId, aItem1.NetAmountWithTax);
+
+
                                     var application = PosApplication.Instance as IApplication;
                                     application.RunOperation(PosisOperations.PayCashQuick, PaymentId1, posTransaction);
                                     // sendLinkAfterPayment(posTransaction.ReceiptId); 
                                     m_strRewardAmount = ((int)((LSRetailPosis.Transaction.RetailTransaction)posTransaction).NetAmountWithTax).ToString();
-                                    process_Qitaf_RewardPoint();
-                                    genShelf(posTransaction.TransactionId, false);
+                                    process_Qitaf_RewardPoint(posTransaction.TransactionId);
+                                    genShelf(posTransaction.TransactionId, posTransaction.StoreId, false);
                                 }
                             }
                             else
@@ -2095,7 +2442,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 case "990": // payment case 7
 
 
-
+                    myTransaction1 = (RetailTransaction)posTransaction;
                     if (myTransaction1.SaleItems.Count > 0)
                     {
 
@@ -2612,17 +2959,20 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                     if (TerminalStatusCode == "00")
                     {
                         //((LSRetailPosis.Transaction.RetailTransaction)posTransaction).
+                        SaleLineItem aItem1 = myTransaction1.SaleItems.First();//!!!!QitafRewardUpdate
+                        bool bSuccess = processQitafRewardUpdateIfAvailable(aItem1.ReturnTransId, aItem1.NetAmountWithTax);
+
 
                         var application = PosApplication.Instance as IApplication;
 
                         application.RunOperation(PosisOperations.PayCashQuick, PaymentId, posTransaction); //1- is ID payment method, transaction - your transaction object
                                                                                                            // sendLinkAfterPayment(posTransaction.ReceiptId); ;// sendLinkAfterPayment(posTransaction.ReceiptId); 
                         m_strRewardAmount = ((int)((LSRetailPosis.Transaction.RetailTransaction)posTransaction).NetAmountWithTax).ToString();
-                        process_Qitaf_RewardPoint();
+                        process_Qitaf_RewardPoint(posTransaction.TransactionId);
                     }
                     //UpdateLog  
                     InsertTransLog(_transactionId, _resultXML, Amount, TerminalStatusCode, PAN, ApprovalCode, CardSchemeEnglish, CardExpiryDate, CardholderVerification);
-                    genShelf(posTransaction.TransactionId, false);
+                    genShelf(posTransaction.TransactionId, posTransaction.StoreId, false);
                     operationInfo.OperationHandled = true;
                     break;
 
@@ -2745,6 +3095,169 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
 
         }
 
+        public Boolean processQitafRewardUpdateIfAvailable(string strTranId, decimal price4Process)
+        {
+            if (price4Process >= 0)
+            { // supported for only refund process. - valeues only.
+                return false;
+            }
+            m_strTansactionID4POS = strTranId;
+            Boolean bRet = false;
+            fDiscountLimitPerYear = -1;
+            System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection();
+            connection.ConnectionString = LSRetailPosis.Settings.ApplicationSettings.Database.LocalConnectionString;
+            try
+            {
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandText = "SELECT TRANSDATATIME,transactionid,phonenumber,Amount,StoreID,transactionGUIDRedeem" +
+                        ",transactionGUIDReward,Reserved,RequestDate FROM ax.RetailQitaftrans where transactionid=@TranId";
+                    command.Parameters.Add("@TranId", SqlDbType.NVarChar).Value = strTranId;
+
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+
+                    using (System.Data.SqlClient.SqlDataAdapter adapter = new System.Data.SqlClient.SqlDataAdapter(command))
+                    {
+                        using (System.Data.DataTable table = new System.Data.DataTable())
+                        {
+                            adapter.Fill(table);
+
+                            if (table.Rows.Count > 0)
+                            {
+                                if (table.Rows[0]["transactionGUIDRedeem"] != DBNull.Value)
+                                {
+                                    m_strTransactionGUIDRedeem = table.Rows[0]["transactionGUIDRedeem"].ToString();
+                                }
+                                if (table.Rows[0]["phonenumber"] != DBNull.Value)
+                                {
+                                    m_strPN = table.Rows[0]["phonenumber"].ToString();
+                                    m_strPN4Qitaf = m_strPN;
+                                }
+                                if (table.Rows[0]["RequestDate"] != DBNull.Value)
+                                {
+                                    m_strRefRequestDate = table.Rows[0]["RequestDate"].ToString();
+                                }
+                                if (table.Rows[0]["transactionGUIDReward"] != DBNull.Value)
+                                {
+                                    m_strRefRequestId = table.Rows[0]["transactionGUIDReward"].ToString();
+                                }
+                                if (table.Rows[0]["Amount"] != DBNull.Value)
+                                {
+                                    m_strAmount = (table.Rows[0]["Amount"].ToString());
+                                }
+                                if (table.Rows[0]["Reserved"] != DBNull.Value)
+                                {
+                                    m_strResidueAmount4RewardUdt = (table.Rows[0]["Reserved"].ToString());
+                                }
+                                else
+                                {
+                                    m_strResidueAmount4RewardUdt = (table.Rows[0]["Amount"].ToString());
+                                }
+
+                                bRet = true;
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+
+            if (decimal.Parse(m_strResidueAmount4RewardUdt) <= 0)
+            {
+                return false;
+            }
+            if (bRet == false)
+            {
+                return false;
+            }
+            decimal reductionAmount = price4Process * -1;
+            reductionAmount = decimal.Parse(m_strResidueAmount4RewardUdt) + price4Process;
+            m_strReductionAmount = ((int)reductionAmount).ToString();
+            int nResCode5 = call_Qitaf_5_RewardUpdate();
+            if (nResCode5 == 0)
+            {
+                MessageBox.Show("Qitaf Reward Update has been completed successfully.");
+                return true;
+            }
+
+            return false;
+        }
+
+        public Boolean prepareFields4ReverseQitaf(string strTranId)
+        {
+            Boolean bRet = false;
+            fDiscountLimitPerYear = -1;
+            System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection();
+            connection.ConnectionString = LSRetailPosis.Settings.ApplicationSettings.Database.LocalConnectionString;
+            try
+            {
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandText = "SELECT TRANSDATATIME,transactionid,phonenumber,Amount,StoreID,transactionGUIDRedeem" +
+                        ",transactionGUIDReward,Reserved,RequestDate FROM ax.RetailQitaftrans where transactionid=@TranId";
+                    command.Parameters.Add("@TranId", SqlDbType.NVarChar).Value = strTranId;
+
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+
+                    using (System.Data.SqlClient.SqlDataAdapter adapter = new System.Data.SqlClient.SqlDataAdapter(command))
+                    {
+                        using (System.Data.DataTable table = new System.Data.DataTable())
+                        {
+                            adapter.Fill(table);
+
+                            if (table.Rows.Count > 0)
+                            {
+                                if (table.Rows[0]["transactionGUIDRedeem"] != DBNull.Value)
+                                {
+                                    m_strTransactionGUIDRedeem = table.Rows[0]["transactionGUIDRedeem"].ToString();
+                                }
+                                if (table.Rows[0]["phonenumber"] != DBNull.Value)
+                                {
+                                    m_strPN = table.Rows[0]["phonenumber"].ToString();
+                                }
+                                if (table.Rows[0]["RequestDate"] != DBNull.Value)
+                                {
+                                    m_strRefRequestDate = table.Rows[0]["RequestDate"].ToString();
+                                }
+                                if (table.Rows[0]["transactionGUIDReward"] != DBNull.Value)
+                                {
+                                    m_strRefRequestId = table.Rows[0]["transactionGUIDReward"].ToString();
+                                }
+                                if (table.Rows[0]["Amount"] != DBNull.Value)
+                                {
+                                    m_strAmount = (table.Rows[0]["Amount"].ToString());
+                                }
+                                bRet = true;
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+
+            return bRet;
+        }
+
         public Boolean IsRegisteredWorkerid(string strWorkerId)
         {
             Boolean bRet = false;
@@ -2786,6 +3299,85 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                                 if (table.Rows[0]["discpercentage"] != DBNull.Value)
                                 {
                                     fDiscountPercentage = Convert.ToDouble(table.Rows[0]["discpercentage"].ToString());
+                                }
+                                bRet = true;
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+
+            return bRet;
+        }
+
+        public Boolean IsRegisteredWorkerAndOwner(string strWorkerId)
+        {
+            Boolean bRet = false;
+            fDiscountLimitPerYear = -1;
+            System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection();
+            connection.ConnectionString = LSRetailPosis.Settings.ApplicationSettings.Database.LocalConnectionString;
+            try
+            {
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandText = "SELECT phonenumber,AmountPeryear,discpercentage, discount30, discount34,discount8,discount9,elsediscount FROM     ax.Retailworkerdiscountparameter where workerid=@WORKERID AND isowner=1 AND " +
+                        "YEAR(startdate) = YEAR(GETDATE())";// TRANSDATATIME -> startdate /
+                    // "SELECT * FROM dbo.RETAILFORMLAYOUT WHERE FORMLAYOUTID = @FORMID";
+                    command.Parameters.Add("@WORKERID", SqlDbType.NVarChar).Value = strWorkerId;
+
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+
+                    using (System.Data.SqlClient.SqlDataAdapter adapter = new System.Data.SqlClient.SqlDataAdapter(command))
+                    {
+                        using (System.Data.DataTable table = new System.Data.DataTable())
+                        {
+                            adapter.Fill(table);
+
+                            if (table.Rows.Count > 0)
+                            {
+                                if (table.Rows[0]["phonenumber"] != DBNull.Value)
+                                {
+                                    strCardNumber = table.Rows[0]["phonenumber"].ToString();
+                                }
+                                if (table.Rows[0]["AmountPeryear"] != DBNull.Value)
+                                {
+                                    string strAmountPerYear = table.Rows[0]["AmountPeryear"].ToString();
+                                    fDiscountLimitPerYear = Convert.ToDouble(strAmountPerYear);
+                                }
+                                if (table.Rows[0]["discpercentage"] != DBNull.Value)
+                                {
+                                    fDiscountPercentage = Convert.ToDouble(table.Rows[0]["discpercentage"].ToString());
+                                }
+                                if (table.Rows[0]["discount30"] != DBNull.Value)
+                                {
+                                    ndiscount30 = Convert.ToInt32(table.Rows[0]["discount30"].ToString());
+                                }
+                                if (table.Rows[0]["discount34"] != DBNull.Value)
+                                {
+                                    ndiscount34 = Convert.ToInt32(table.Rows[0]["discount34"].ToString());
+                                }
+                                if (table.Rows[0]["discount8"] != DBNull.Value)
+                                {
+                                    ndiscount8 = Convert.ToInt32(table.Rows[0]["discount8"].ToString());
+                                }
+                                if (table.Rows[0]["discount9"] != DBNull.Value)
+                                {
+                                    ndiscount9 = Convert.ToInt32(table.Rows[0]["discount9"].ToString());
+                                }
+                                if (table.Rows[0]["elsediscount"] != DBNull.Value)
+                                {
+                                    nelsediscount = Convert.ToInt32(table.Rows[0]["elsediscount"].ToString());
                                 }
                                 bRet = true;
                             }
@@ -3025,7 +3617,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 webrequest.Method = "POST";
 
                 webrequest.ContentType = "application/json";
-                webrequest.Headers["merchantToken"] = m_strTokenType + " Grasse@2022";//webrequest.Headers.Add("merchantToken", "Bearer Khalta@2021");
+                webrequest.Headers["merchantToken"] = m_strTokenType + " Reef@2022";//webrequest.Headers.Add("merchantToken", "Bearer Khalta@2021");
                 webrequest.Headers["Authorization"] = m_strTokenType + " " + m_strAccessToken; //webrequest.Headers.Add("Authorization", "Bearer " + m_strAccessToken);
                 string postData = "{\"transactionID\":" + Uri.EscapeDataString(m_strTransactionID) + "}";
 
@@ -3091,7 +3683,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 webrequest.Method = "POST";
 
                 webrequest.ContentType = "application/json";
-                webrequest.Headers["merchantToken"] = m_strTokenType + " Grasse@2022";//webrequest.Headers.Add("merchantToken", "Bearer Khalta@2021");
+                webrequest.Headers["merchantToken"] = m_strTokenType + " Reef@2022";//webrequest.Headers.Add("merchantToken", "Bearer Khalta@2021");
                 webrequest.Headers["Authorization"] = m_strTokenType + " " + m_strAccessToken; //webrequest.Headers.Add("Authorization", "Bearer " + m_strAccessToken);
                 var data = @"{
                     ""OTPValue"": """ + m_strOTPValue + @""",
@@ -3210,7 +3802,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 HttpWebRequest webrequest = (HttpWebRequest)WebRequest.Create(url);
                 webrequest.Method = "POST";
                 webrequest.ContentType = "application/json";
-                webrequest.Headers["merchantToken"] = m_strTokenType + " Grasse@2022";//webrequest.Headers.Add("merchantToken", "Bearer Khalta@2021");
+                webrequest.Headers["merchantToken"] = m_strTokenType + " Reef@2022 ";//webrequest.Headers.Add("merchantToken", "Bearer Khalta@2021");
                 webrequest.Headers["Authorization"] = m_strTokenType + " " + m_strAccessToken; //webrequest.Headers.Add("Authorization", "Bearer " + m_strAccessToken);
                 var data = @"{
                     ""mobile"": """ + m_strPN + @""",
@@ -3302,9 +3894,63 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
             }
         }
 
+        public int call_Qitaf_5_RewardUpdate()
+        {
+            Cursor.Current = Cursors.WaitCursor; AutoClosingMessageBox.Show("Please wait for Qitaf respone for few seconds.", "Processing for Qitaf", 2000);
+            var _url = "http://78.93.37.230:9799/RedemptionLiteIntegrationServiceBasicHttpEndPoint"; // here ?? 
+            var _action = "http://tempuri.org/IRedemptionLiteIntegrationService/RewardUpdate";
+            try
+            {
+                XmlDocument soapEnvelopeXml = CreateSoapEnvelope5();
+                HttpWebRequest webRequest = CreateWebRequest(_url, _action);
+                InsertSoapEnvelopeIntoWebRequest(soapEnvelopeXml, webRequest);
+
+                // begin async call to web request.
+                IAsyncResult asyncResult = webRequest.BeginGetResponse(null, null);
+
+                // suspend this thread until call is complete. You might want to
+                // do something usefull here like update your UI.
+                asyncResult.AsyncWaitHandle.WaitOne();
+
+                // get the response from the completed web request.
+                string soapResult;
+                using (WebResponse webResponse = webRequest.EndGetResponse(asyncResult))
+                {
+                    using (StreamReader rd = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        soapResult = rd.ReadToEnd();
+                    }
+                    Console.Write(soapResult);
+                }
+
+                Regex regex = new Regex("<a:ResponseCode>(.*?)</a:ResponseCode>");
+                var regMatch = regex.Match(soapResult);
+                string strResponseCode = regMatch.Groups[1].ToString();
+                int nResponseCode = Int32.Parse(strResponseCode);
+                if (nResponseCode == 0)
+                {
+                    Update_QitafTrans4RewardUpdate();
+                }
+                Cursor.Current = Cursors.Default;
+                if (nResponseCode > 0)
+                {
+                    showMessageForm_Qitaf("Qitaf Reward Update has been failed.", nResponseCode);
+                }
+                return nResponseCode;
+            }
+            catch (Exception e)
+            {
+                Cursor.Current = Cursors.Default;
+                MessageBox.Show("Error on Qitaf Reward Update API request:" + e.ToString());
+                return -1;
+            }
+
+        }
+
         public int call_Qitaf_4_RewardPoint()
         {
-            var _url = "http://78.93.37.230:9799/RedemptionLiteIntegrationServiceBasicHttpEndPoint";
+            Cursor.Current = Cursors.WaitCursor; AutoClosingMessageBox.Show("Please wait for Qitaf respone for few seconds.", "Processing for Qitaf", 2000);
+            var _url = "http://78.93.37.230:9799/RedemptionLiteIntegrationServiceBasicHttpEndPoint"; // here ?? 
             var _action = "http://tempuri.org/IRedemptionLiteIntegrationService/RewardPoint";
             try
             {
@@ -3336,8 +3982,10 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 int nResponseCode = Int32.Parse(strResponseCode);
                 if (nResponseCode == 0)
                 {
+                    m_strPN = m_strPN4Qitaf;
                     Insert_QitafTrans();
                 }
+                Cursor.Current = Cursors.Default;
                 if (nResponseCode > 0)
                 {
                     showMessageForm_Qitaf("Qitaf Reward Point has been failed.", nResponseCode);
@@ -3346,6 +3994,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
             }
             catch (Exception e)
             {
+                Cursor.Current = Cursors.Default;
                 MessageBox.Show("Error on Qitaf Reward Point API request:" + e.ToString());
                 return -1;
             }
@@ -3354,6 +4003,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
 
         public int call_Qitaf_3_ReversePoint()
         {
+            Cursor.Current = Cursors.WaitCursor; AutoClosingMessageBox.Show("Please wait for Qitaf respone for few seconds.", "Processing for Qitaf", 2000);
             string strGuid = Guid.NewGuid().ToString();
             var _url = "http://78.93.37.230:9799/RedemptionLiteIntegrationServiceBasicHttpEndPoint";
             var _action = "http://tempuri.org/IRedemptionLiteIntegrationService/ReverseQitafPointRedemption";
@@ -3389,6 +4039,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 {
                     Update_QitafTrans4Reverse();
                 }
+                Cursor.Current = Cursors.Default;
                 if (nResponseCode > 0)
                 {
                     showMessageForm_Qitaf("Qitaf Reverse Point has been failed.", nResponseCode);
@@ -3397,6 +4048,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
             }
             catch (Exception e)
             {
+                Cursor.Current = Cursors.Default;
                 MessageBox.Show("Error on Qitaf Reverse Point API request:" + e.ToString());
                 return -1;
             }
@@ -3406,6 +4058,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
 
         public int call_Qitaf_2_RedeemPoint(string strAmount, string strPin)
         {
+            Cursor.Current = Cursors.WaitCursor; AutoClosingMessageBox.Show("Please wait for Qitaf respone for few seconds.", "Processing for Qitaf", 2000);
             m_strAmount = strAmount;
             var _url = "http://78.93.37.230:9799/RedemptionLiteIntegrationServiceBasicHttpEndPoint";
             var _action = "http://tempuri.org/IRedemptionLiteIntegrationService/RedeemQitafPoints";
@@ -3441,6 +4094,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 {
                     Insert_QitafTrans();
                 }
+                Cursor.Current = Cursors.Default;
                 if (nResponseCode > 0)
                 {
                     showMessageForm_Qitaf("Qitaf Redeem Point has been failed.", nResponseCode);
@@ -3449,6 +4103,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
             }
             catch (Exception e)
             {
+                Cursor.Current = Cursors.Default;
                 MessageBox.Show("Error on Qitaf Redeem Point API request:" + e.ToString());
                 return -1;
             }
@@ -3458,6 +4113,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
 
         public int call_Qitaf_1_GenOTP()
         {
+            Cursor.Current = Cursors.WaitCursor; AutoClosingMessageBox.Show("Please wait for Qitaf respone for few seconds.", "Processing for Qitaf", 4000);
             string strGuid = Guid.NewGuid().ToString();
             var _url = "http://78.93.37.230:9799/RedemptionLiteIntegrationServiceBasicHttpEndPoint";
             var _action = "http://tempuri.org/IRedemptionLiteIntegrationService/GenerateOTP";
@@ -3489,14 +4145,17 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 var regMatch = regex.Match(soapResult);
                 string strResponseCode = regMatch.Groups[1].ToString();
                 int nResponseCode = Int32.Parse(strResponseCode);
+                Cursor.Current = Cursors.Default;
                 if (nResponseCode > 0)
                 {
-                    showMessageForm_Qitaf("Qitaf Generate OTP has been failed.", nResponseCode);
+                    showMessageForm_Qitaf("", nResponseCode);
+                    // showMessageForm_Qitaf("Qitaf Generate OTP has been failed.", nResponseCode);
                 }
                 return nResponseCode;
             }
             catch (Exception e)
             {
+                Cursor.Current = Cursors.Default;
                 MessageBox.Show("Error on Qitaf Generate OTP API request:" + e.ToString());
                 return -1;
             }
@@ -3513,13 +4172,54 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
             return webRequest;
         }
 
+        private XmlDocument CreateSoapEnvelope5()
+        {
+            string strReqGuid = Guid.NewGuid().ToString();
+            m_strTransactionGUIDReward = strReqGuid;
+            m_strTransactionGUIDRedeem = " ";
+            string strBranchId = "15930001";//11980000
+            string strMSIDSN = m_strPN4Qitaf;
+            //m_strPN = strMSIDSN;
+            string strReqDate = DateTime.Now.ToString("yyyy-MM-dd") + "T" + DateTime.Now.ToString("HH:mm:ss");
+            string strTermId = strBranchId;
+            string strLangCode = "en-US";
+
+            XmlDocument soapEnvelopeDocument = new XmlDocument();
+            string strXml =
+                @"<soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" 
+                    xmlns:tem = ""http://tempuri.org/""
+                    xmlns:red = ""http://schemas.datacontract.org/2004/07/Redemption.Lite.Integration.Service.Interface"">
+                    <soapenv:Header/>
+                    <soapenv:Body>
+                      <tem:RewardUpdate>
+                       <tem:request>
+                        <red:BranchId>" + strBranchId + @"</red:BranchId>
+                        <red:Language>" + strLangCode + @"</red:Language>
+                        <red:MSISDN>" + strMSIDSN + @"</red:MSISDN>
+                        <red:RequestDateTime>" + strReqDate + @"</red:RequestDateTime>
+                        <red:RequestId>" + strReqGuid + @"</red:RequestId>
+                        <red:TerminalId>" + strTermId + @"</red:TerminalId>
+                        <red:ReductionAmount>" + m_strReductionAmount + @"</red:ReductionAmount>
+                        <red:RefRequestDateTime>" + m_strRefRequestDate + @"</red:RefRequestDateTime>
+                        <red:RefRequestId>" + m_strRefRequestId + @"</red:RefRequestId>
+                       </tem:request>
+                      </tem:RewardUpdate>
+                    </soapenv:Body>
+                    </soapenv:Envelope>";
+            soapEnvelopeDocument.LoadXml(strXml);
+            //                        < red:RefRequestDateTime > 2022 - 05 - 11T23: 49:59 </ red:RefRequestDateTime >
+            //                        < red:RefRequestId > 95416d57 - 9937 - 47bd - a625 - 95adafec2735 </ red:RefRequestId >
+
+            return soapEnvelopeDocument;
+        }
+
         private XmlDocument CreateSoapEnvelope4()
         {
             string strReqGuid = Guid.NewGuid().ToString();
             m_strTransactionGUIDReward = strReqGuid;
             m_strTransactionGUIDRedeem = " ";
-            string strBranchId = "11980000";
-            string strMSIDSN = m_strPN4Qitaf; // @"506617981";
+            string strBranchId = "15930001";//11980000
+            string strMSIDSN = m_strPN4Qitaf;
             //m_strPN = strMSIDSN;
             string strReqDate = DateTime.Now.ToString("yyyy-MM-dd") + "T" + DateTime.Now.ToString("HH:mm:ss");
             string strTermId = strBranchId;
@@ -3553,10 +4253,12 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
         private XmlDocument CreateSoapEnvelope3()
         {
             string strReqGuid = Guid.NewGuid().ToString();
-            string strBranchId = "11980000";
-            string strMSIDSN = m_strPN;// @"506617981";
-            string strReqDate = DateTime.Now.ToString("yyyy-MM-dd") + "T" + DateTime.Now.ToString("HH:mm:ss");
+            string strBranchId = "15930001";
             string strTermId = strBranchId;
+            string strMSIDSN = m_strPN;// @"506617981";
+            //m_strRefRequestDate
+            //m_strRefRequestId
+            string strReqDate = DateTime.Now.ToString("yyyy-MM-dd") + "T" + DateTime.Now.ToString("HH:mm:ss");
             string strLangCode = "en-US";
 
             XmlDocument soapEnvelopeDocument = new XmlDocument();
@@ -3590,12 +4292,12 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
             m_strTransactionGUIDRedeem = strReqGuid;
             m_strTransactionGUIDReward = " ";
             m_strRefRequestId = strReqGuid;
-            string strBranchId = "11980000";
+            string strBranchId = "15930001";
             string strMSIDSN = m_strPN;// @"506617981";
             m_strPN = strMSIDSN;
             string strReqDate = DateTime.Now.ToString("yyyy-MM-dd") + "T" + DateTime.Now.ToString("HH:mm:ss");
             m_strRefRequestDate = strReqDate;
-            string strTermId = strBranchId;
+            string strTermId = "15930001";//]strBranchId;
             string strLangCode = "en-US";
 
             XmlDocument soapEnvelopeDocument = new XmlDocument();
@@ -3627,10 +4329,10 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
         private XmlDocument CreateSoapEnvelope1()
         {
             string strReqGuid = Guid.NewGuid().ToString();
-            string strBranchId = "11980000";
+            string strBranchId = "15930001";
             string strMSIDSN = m_strPN;// @"506617981";//
             string strReqDate = DateTime.Now.ToString("yyyy-MM-dd") + "T" + DateTime.Now.ToString("HH:mm:ss");
-            string strTermId = strBranchId;
+            string strTermId = "15930001";
             string strLangCode = "en-US";
 
             XmlDocument soapEnvelopeDocument = new XmlDocument();
@@ -3768,7 +4470,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
             m_strEncInvoice = encrypted.ToString();// encrypted.ToString().ToUpper().Substring(2);
         }
 
-        public void genShelf(string strReceiptId, bool bSendSMS)
+        public void genShelf(string strReceiptId, string strStoreId, bool bSendSMS)
         {
             if (strReceiptId == null)
             {
@@ -3789,6 +4491,7 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
                 var encrypted = SQLServerCryptoMethod.ToBase36(ulong.Parse(strReceiptId));
                 System.Console.WriteLine(encrypted.ToString().ToUpper());
                 m_strEncInvoice = encrypted.ToString();// encrypted.ToString().ToUpper().Substring(2);*/
+                Insert_QRShelf(strReceiptId, m_strEncInvoice, strStoreId);
                 saveEncInvoice2TableByTranId(m_strEncInvoice, strReceiptId);
             }
         }
@@ -3810,6 +4513,27 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
             sqlConn.Open();
             da.UpdateCommand.ExecuteNonQuery();
             sqlConn.Close();
+        }
+
+        public void Insert_QRShelf(string strTrans, string strShelf, string strStoreId)
+        {
+            System.Data.SqlClient.SqlConnection sqlConn = new System.Data.SqlClient.SqlConnection();
+            sqlConn.ConnectionString = LSRetailPosis.Settings.ApplicationSettings.Database.LocalConnectionString;
+            string query = "INSERT INTO ax.QRSHELF (TRANSDATATIME,transactionid, SHELF, StoreID)";
+            query += " VALUES (@TRANSDATATIME,@transactionid,@SHELF,@StoreID)";
+
+            SqlDataAdapter da = new SqlDataAdapter();
+            da.InsertCommand = new SqlCommand(query, sqlConn);
+
+            da.InsertCommand.Parameters.Add("@TRANSDATATIME", SqlDbType.DateTime).Value = DateTime.Now;
+            da.InsertCommand.Parameters.Add("@transactionid", SqlDbType.VarChar).Value = strTrans;
+            da.InsertCommand.Parameters.Add("@SHELF", SqlDbType.VarChar).Value = strShelf;
+            da.InsertCommand.Parameters.Add("@StoreID", SqlDbType.VarChar).Value = strStoreId;
+
+            sqlConn.Open();
+            da.InsertCommand.ExecuteNonQuery();
+            sqlConn.Close();
+
         }
 
         public void Insert_AlrahjiBankTrans()
@@ -3857,12 +4581,42 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
             sqlConn.Close();
         }
 
+        public void Update_QitafTrans4RewardUpdate()
+        {
+            System.Data.SqlClient.SqlConnection sqlConn = new System.Data.SqlClient.SqlConnection();
+            sqlConn.ConnectionString = LSRetailPosis.Settings.ApplicationSettings.Database.LocalConnectionString;
+            string query = "UPDATE ax.RetailQitaftrans SET Reserved = @Reserved WHERE transactionGUIDReward=@transactionGUIDReward";
+
+            SqlDataAdapter da = new SqlDataAdapter();
+            da.UpdateCommand = new SqlCommand(query, sqlConn);
+            string strReserved = "";
+            decimal restAmount;
+            if (decimal.Parse(m_strResidueAmount4RewardUdt) == 0)
+            {
+                restAmount = decimal.Parse(m_strAmount);
+            }
+            else
+            {
+                restAmount = decimal.Parse(m_strResidueAmount4RewardUdt);
+            }
+            restAmount = restAmount - decimal.Parse(m_strReductionAmount);
+            strReserved = restAmount.ToString();
+
+
+            da.UpdateCommand.Parameters.Add("@Reserved", SqlDbType.VarChar).Value = strReserved;
+            da.UpdateCommand.Parameters.Add("@transactionGUIDReward", SqlDbType.VarChar).Value = m_strTransactionGUIDReward;
+
+            sqlConn.Open();
+            da.UpdateCommand.ExecuteNonQuery();
+            sqlConn.Close();
+        }
+
         public void Insert_QitafTrans()
         {
             System.Data.SqlClient.SqlConnection sqlConn = new System.Data.SqlClient.SqlConnection();
             sqlConn.ConnectionString = LSRetailPosis.Settings.ApplicationSettings.Database.LocalConnectionString;
-            string query = "INSERT INTO ax.RetailQitaftrans (TRANSDATATIME,transactionid, phonenumber, StoreID, Amount,transactionGUIDReward,transactionGUIDRedeem)";
-            query += " VALUES (@TRANSDATATIME,@transactionid,@phonenumber, @StoreID, @Amount, @transactionGUIDReward,@transactionGUIDRedeem)";
+            string query = "INSERT INTO ax.RetailQitaftrans (TRANSDATATIME,transactionid, phonenumber, StoreID, Amount,transactionGUIDReward,transactionGUIDRedeem,RequestDate)";
+            query += " VALUES (@TRANSDATATIME,@transactionid,@phonenumber, @StoreID, @Amount, @transactionGUIDReward,@transactionGUIDRedeem,@RequestDate)";
 
             SqlDataAdapter da = new SqlDataAdapter();
             da.InsertCommand = new SqlCommand(query, sqlConn);
@@ -3876,6 +4630,11 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
             da.InsertCommand.Parameters.Add("@Amount", SqlDbType.VarChar).Value = m_strTransactionGUIDRedeem.Length > 5 ? m_strAmount : m_strRewardAmount;
             da.InsertCommand.Parameters.Add("@transactionGUIDReward", SqlDbType.VarChar).Value = m_strTransactionGUIDReward;
             da.InsertCommand.Parameters.Add("@transactionGUIDRedeem", SqlDbType.VarChar).Value = m_strTransactionGUIDRedeem;
+            if (m_strRefRequestDate == "" || m_strRefRequestDate == null || m_strRefRequestDate.Length < 5)
+            {
+                m_strRefRequestDate = DateTime.Now.ToString("yyyy-MM-dd") + "T" + DateTime.Now.ToString("HH:mm:ss");
+            }
+            da.InsertCommand.Parameters.Add("@RequestDate", SqlDbType.VarChar).Value = m_strRefRequestDate;
 
 
             sqlConn.Open();
@@ -3884,8 +4643,9 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
 
         }
 
-        public void process_Qitaf_RewardPoint()
+        public void process_Qitaf_RewardPoint(string strTransId)
         {
+            m_strTansactionID4POS = strTransId;
             if (m_strPN4Qitaf == null)
             {
                 return;
@@ -3898,8 +4658,11 @@ namespace Microsoft.Dynamics.Retail.Pos.BlankOperations
             if (nRespCode4 == 0)
             {
                 //   SendLink2SMS(m_strPN4Qitaf, "Qitaf Reward Point has been completed successfully. Amount:" + m_strRewardAmount);
-                m_strPN4Qitaf = "";
-                MessageBox.Show("Qitaf Reward Point has been completed successfully. تم إرسال مبلغ المشتريات لحساب العميل بقطاف");
+                // after process RewardPointer, collected Qitaf info should be deleted.
+                // because it is available only one transaction. 2022.5.19 confirmed together!!!!OK?
+                // and need to touch "collect Qitaf" before call "rewardupdate"?
+                m_strPN4Qitaf = ""; // disabled now. it should keep for long for next phase.
+                MessageBox.Show(" تم إرسال مبلغ المشتريات لحساب العميل بقطاف");
             }
             else
             {
